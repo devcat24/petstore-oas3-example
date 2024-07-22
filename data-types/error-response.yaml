@@ -1,0 +1,6 @@
+components:
+  responses:
+    client-id-required_401:
+      description: Unauthorized or invalid client application credentials
+    client-id-required_500:
+      description: Bad response from authorization server, or WSDL SOAP Fault error     

@@ -1,0 +1,29 @@
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: This API supports OAuth 2.0 for authenticating all API requests.
+      flows:
+        # one of 'implicite, password, clientCredentials, authorizationCode'
+        clientCredentials:
+          tokenUrl: https://petstore.localhost/api/oauth2/token
+          # scopes:
+          #   write:scope: write scope for resource
+          scopes: {}
+
+        # authorizationCode:
+        #    authorizationUrl:  https://petstore.auth.server/oauth2/v2.0/authorize
+        #    tokenUrl: https://petstore.auth.server/oauth2/v2.0/token
+        #    scopes:
+        #     users:read: Read user information
+        #     users:write: Modify user information
+
+    openIdConnect:
+      type: openIdConnect
+      openIdConnectUrl: https://petstore.auth.server/.well-known/openid-configuration
+
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+

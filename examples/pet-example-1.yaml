@@ -1,0 +1,8 @@
+components:
+  examples:
+    pet-example-1001:
+      summary: Pet example 1001
+      value:
+        id: 1001
+        name: sheepdog
+        tag: pet,dog

@@ -1,0 +1,20 @@
+components:
+  parameters:
+    x-correlation-id:
+      name: X-Correlation-ID
+      in: header
+      schema:
+        maxLength: 50
+        type: string
+    client-id:
+      in: header
+      name: client_id
+      required: true
+      schema:
+        type: string
+    client-secret:
+      in: header
+      name: client_secret
+      required: true
+      schema:
+        type: string

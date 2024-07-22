@@ -1,0 +1,185 @@
+openapi: "3.0.3"
+info:
+  version: 1.0.1
+  title: Swagger Petstore
+  license:
+    name: MIT
+# servers:
+#   - url: http://localhost:3000/
+paths:
+  /pets:
+    get:
+      summary: List all pets
+      operationId: listPets
+      tags:
+        - pets
+      # security: 
+      #   - oauth2: []
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            maximum: 100
+            format: int32
+        # - "$ref": "#/components/parameters/client-id"
+        # - "$ref": "#/components/parameters/client-secret"
+        - "$ref": "#/components/parameters/x-correlation-id"
+      responses:
+        '200':
+          description: A paged array of pets
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/pets"
+        '401':
+          "$ref": "#/components/responses/client-id-required_401"
+        '500':
+          "$ref": "#/components/responses/client-id-required_500"
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/Pets"
+        # default:
+        #   description: unexpected error
+        #   content:
+        #     application/json:
+        #       schema:
+        #         $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a pet
+      operationId: createPets
+      tags:
+        - pets
+      # security: 
+      #   - oauth2: []
+      responses:
+        '201':
+          description: Empty Payload
+        '401':
+          "$ref": "#/components/responses/client-id-required_401"
+        '500':
+          "$ref": "#/components/responses/client-id-required_500"
+        # default:
+        #   description: unexpected error
+        #   content:
+        #     application/json:
+        #       schema:
+        #         $ref: "#/components/schemas/Error"
+      parameters:
+        # - "$ref": "#/components/parameters/client-id"
+        # - "$ref": "#/components/parameters/client-secret"
+        - "$ref": "#/components/parameters/x-correlation-id"
+
+
+  /pets/{petId}:
+    get:
+      summary: Info for a specific pet
+      operationId: showPetById
+      tags:
+        - pets
+      # security: 
+      #   - oauth2: []
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string
+        # - "$ref": "#/components/parameters/client-id"
+        # - "$ref": "#/components/parameters/client-secret"
+        - "$ref": "#/components/parameters/x-correlation-id"
+
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/pet"
+              # adding single example -> working
+              # OAS3.1 external example supports: https://github.com/OAI/OpenAPI-Specification/blob/main/versions/3.1.0.md#request-body-examples
+              example:
+                id: 1004
+                name: 'pug'
+                tag: 'pet,dog' 
+              # examples: 
+              #   $ref: '#/components/examples/pet-example-1001'
+
+        '401':
+          "$ref": "#/components/responses/client-id-required_401"
+        '500':
+          "$ref": "#/components/responses/client-id-required_500"
+        # default:
+        #   description: unexpected error
+        #   content:
+        #     application/json:
+        #       schema:
+        #         $ref: "#/components/schemas/Error"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: './traits/security-schemes.yaml#/components/securitySchemes/bearerAuth'
+    openIdConnect:
+      $ref: './traits/security-schemes.yaml#/components/securitySchemes/openIdConnect'  
+    oauth2:
+      $ref: './traits/security-schemes.yaml#/components/securitySchemes/oauth2'
+
+  examples:
+    pet-example-1001:
+      value:
+        id: 1001
+        name: 'terrier'
+        tag: 'pet,dog'      
+
+  schemas:
+    pet:
+      $ref: './data-types/pet.yaml#/components/schemas/pet'
+    healthcheck:
+      $ref: './data-types/healthcheck.yaml#/components/schemas/healthcheck'
+    pets:
+      type: array
+      title: "Pet List"
+      maxItems: 100
+      items:
+        $ref: './data-types/pet.yaml#/components/schemas/pet'
+    Error:
+      type: object
+      title: "Error Object"
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+
+  responses:
+    client-id-required_401:
+      $ref: './data-types/error-response.yaml#/components/responses/client-id-required_401'
+    client-id-required_500:
+      $ref: './data-types/error-response.yaml#/components/responses/client-id-required_500'
+
+  parameters:
+    client-id:
+      $ref: './traits/request-parameters.yaml#/components/parameters/client-id'
+    client-secret:
+      $ref: './traits/request-parameters.yaml#/components/parameters/client-secret'
+    x-correlation-id:
+      $ref: './traits/request-parameters.yaml#/components/parameters/x-correlation-id'
+
+  requestBodies: {}
+  headers: {}
+  links: {}
+  callbacks: {}
